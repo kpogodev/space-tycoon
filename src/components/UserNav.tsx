@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useEffect } from 'react'
+import { useMemo, useCallback } from 'react'
 import { useAppSelector, useAppDispatch } from '@/app/hooks'
 import { selectAuth, logoutAuth } from '@/features/auth/authSlice'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
