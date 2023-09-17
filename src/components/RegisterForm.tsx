@@ -4,7 +4,7 @@ import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { registerAuth, selectIsAuthenticated } from '@/features/auth/authSlice'
+import { registerAuth, selectIsAuthenticated, selectIsLoading } from '@/features/auth/authSlice'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -36,9 +36,11 @@ const formSchema = z.object({
 
 
 const RegisterForm = () => {
-    const isAuthenticated = useAppSelector(selectIsAuthenticated)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
+    const isAuthenticated = useAppSelector(selectIsAuthenticated)
+    const isLoading = useAppSelector(selectIsLoading)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: 'all'
@@ -84,7 +86,7 @@ const RegisterForm = () => {
                     </FormItem>
                 )}/>
                 <FormMessage>{form.formState.errors.password?.message}</FormMessage>
-                <Button type='submit' className='mt-5'>Register</Button>
+                <Button type='submit' className='mt-5 transition-all' disabled={isLoading}>Sign Up</Button>
             </form>
         </Form>
     )
