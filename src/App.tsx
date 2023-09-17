@@ -1,10 +1,12 @@
 import { Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+// Views
 import RootLayout from '@/views/RootLayout'
 import LoginView from '@/views/LoginView'
 import RegisterView from '@/views/RegisterView'
 import DashboardView from '@/views/DashboardView'
-import 'react-toastify/dist/ReactToastify.css'
 import PrivateRoutes from './views/PrivateRoutes'
 import NotFoundView from './views/NotFoundView'
 
@@ -21,7 +23,7 @@ function App() {
                 </Route>
                 <Route path='*' element={<NotFoundView />} />
             </Routes>
-            <ToastContainer autoClose={5000} position='bottom-center' />
+            <ToastContainer autoClose={5000} position='bottom-center' theme='dark'/>
         </>
     )
 }

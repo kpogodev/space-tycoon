@@ -9,7 +9,11 @@ const RootLayout = () => {
   const location = useLocation()
 
   if (!isAuthenticated && !dontRedirect.includes(location.pathname)) return <Navigate to='/login' />;
-  return <Outlet />;
+  return (
+    <div className='min-h-screen w-full bg-background text-foreground'>
+      <Outlet />
+    </div>
+  );
 
 }
 
