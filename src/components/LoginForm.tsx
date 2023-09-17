@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks'
 import { loginAuth, selectIsAuthenticated, selectIsLoading } from '@/features/auth/authSlice'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ReloadIcon } from '@radix-ui/react-icons'
 import {
     Form,
     FormControl,
@@ -66,7 +67,10 @@ const LoginForm = () => {
                     </FormItem>
                 )}/>
                 <FormMessage>{form.formState.errors.password?.message}</FormMessage>
-                <Button type='submit' className='mt-5 transition-all' disabled={isLoading}>Sign In</Button>
+                <Button type='submit' className='mt-5 transition-all' disabled={isLoading}>
+                    {isLoading && <ReloadIcon className="animate-spin mr-2 h-4 w-4"/>}
+                    Sign In
+                </Button>
             </form>
         </Form>
     )

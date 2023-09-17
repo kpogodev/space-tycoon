@@ -35,11 +35,11 @@ const registerEpic: Epic = (action$: ActionsType) => {
                 catchError((err) => {
                     axiosErrorHandler(err)
                     return [registerAuthFailure()]
-                })
+                }),
+                startWith(setIsLoading(true)),
+                endWith(setIsLoading(false))
             )
         }),
-        startWith(() => [setIsLoading(true)]),
-        endWith(() => [setIsLoading(false)])
     )
 }
 
@@ -55,11 +55,11 @@ const loginEpic: Epic = (action$: ActionsType) => {
                 catchError((err) => {
                     axiosErrorHandler(err)
                     return [loginAuthFailure()]
-                })
+                }),
+                startWith(setIsLoading(true)),
+                endWith(setIsLoading(false))
             )
         }),
-        startWith(() => [setIsLoading(true)]),
-        endWith(() => [setIsLoading(false)])
     )
 }
 

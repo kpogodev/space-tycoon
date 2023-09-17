@@ -1,3 +1,4 @@
+import { ReloadIcon } from "@radix-ui/react-icons"
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import z from 'zod'
@@ -86,7 +87,10 @@ const RegisterForm = () => {
                     </FormItem>
                 )}/>
                 <FormMessage>{form.formState.errors.password?.message}</FormMessage>
-                <Button type='submit' className='mt-5 transition-all' disabled={isLoading}>Sign Up</Button>
+                <Button type='submit' className='mt-5 transition-all' disabled={isLoading}>
+                    {isLoading && <ReloadIcon className="animate-spin mr-2 h-4 w-4"/>}
+                    Sign Up
+                </Button>
             </form>
         </Form>
     )
