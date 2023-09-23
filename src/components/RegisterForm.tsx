@@ -5,7 +5,7 @@ import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { registerAuth, selectIsAuthenticated, selectIsLoading } from '@/features/auth/authSlice'
+import { registerAuth, selectIsAuthenticated, selectIsLoading } from '@/features/authSlice'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -44,7 +44,12 @@ const RegisterForm = () => {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        mode: 'all'
+        mode: 'all',
+        defaultValues: {
+            nick: '',
+            email: '',
+            password: ''
+        }
     })
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {

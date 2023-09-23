@@ -4,7 +4,7 @@ import App from './App.tsx'
 import { ThemeProvider } from '@/components/ThemeProvider.tsx'
 import { Provider } from 'react-redux'
 import { store } from '@/app/store'
-import { checkAuth } from './features/auth/authSlice.ts'
+import { checkAuth } from './features/authSlice.ts'
 import { BrowserRouter as Router } from 'react-router-dom'
 import './index.css'
 

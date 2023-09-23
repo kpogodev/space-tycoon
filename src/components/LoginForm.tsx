@@ -4,7 +4,7 @@ import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useAppDispatch, useAppSelector } from '@/app/hooks'
-import { loginAuth, selectIsAuthenticated, selectIsLoading } from '@/features/auth/authSlice'
+import { loginAuth, selectIsAuthenticated, selectIsLoading } from '@/features/authSlice'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ReloadIcon } from '@radix-ui/react-icons'
@@ -33,7 +33,11 @@ const LoginForm = () => {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        mode: 'all'
+        mode: 'all',
+        defaultValues: {
+            email: '',
+            password: ''
+        }
     })
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {

@@ -17,7 +17,7 @@ import {
     logoutAuth,
     logoutAuthSuccess,
     logoutAuthFailure,
-} from '@/features/auth/authSlice'
+} from '@/features/authSlice'
 import type { Observable } from 'rxjs'
 
 type ActionsType = Observable<any>

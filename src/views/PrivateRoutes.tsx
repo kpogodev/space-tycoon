@@ -1,6 +1,6 @@
 import { useLocation, Outlet, Navigate } from 'react-router-dom'
 import { useAppSelector } from '@/app/hooks'
-import { selectIsAuthenticated } from '@/features/auth/authSlice'
+import { selectIsAuthenticated } from '@/features/authSlice'
 import DashboardNavbar from '@/components/DashboardNavbar'
 
 const PrivateRoutes = () => {

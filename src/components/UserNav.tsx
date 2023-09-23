@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from 'react'
 import { useAppSelector, useAppDispatch } from '@/app/hooks'
-import { selectAuth, logoutAuth } from '@/features/auth/authSlice'
+import { selectAuth, logoutAuth } from '@/features/authSlice'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
