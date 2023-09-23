@@ -9,8 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
 import { cn } from '@/utils/utils'
-import { createAgent } from '@/features/accountAgentsSlice'
-import type { ChangeEvent } from 'react'
+import { createAgent, selectAccountAgentsIsLoading } from '@/features/accountAgentsSlice'
 
 const FACTION_VALUES = [
     'COSMIC',
@@ -53,7 +52,7 @@ const formSchema = z.object({
 
 const AgentCreateForm = () => {
     const dispatch = useAppDispatch()
-    // const isLoading = useAppSelector()
+    const isLoading = useAppSelector(selectAccountAgentsIsLoading)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -149,8 +148,8 @@ const AgentCreateForm = () => {
                 />
                 <FormMessage>{form.formState.errors.faction?.message}</FormMessage>
                 <Button type='submit' className='mt-5 transition-all'>
-                    {/* {isLoading && <ReloadIcon className='animate-spin mr-2 h-4 w-4' />} */}
-                    Add
+                    {isLoading && <ReloadIcon className='animate-spin mr-2 h-4 w-4' />}
+                    Create Agent
                 </Button>
             </form>
         </Form>

@@ -16,11 +16,13 @@ type CreateAgentResponseType = ResponseType<AgentResponseData>
 
 
 const requestUrl = {
-    getAgents: '/agent/list',
+    getAgentsList: '/agent/list',
+    getSelectedAgent: (id: string | number) => `/agent/${id}`,
     createAgent: '/agent',
 }
 
 export default {
-    getAgents: (): GetAgentsResponseType => axiosInstanceInternal.get(requestUrl.getAgents),
+    getAgentsList: (): GetAgentsResponseType => axiosInstanceInternal.get(requestUrl.getAgentsList),
     createAgent: (payload: CreateAgentInputs): CreateAgentResponseType => axiosInstanceInternal.post(requestUrl.createAgent, payload),
+    getSelectedAgent: (id: number): ResponseType<AgentResponseData> => axiosInstanceInternal.get(requestUrl.getSelectedAgent(id)),
 }

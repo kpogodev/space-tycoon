@@ -1,6 +1,5 @@
-import { toast } from 'react-toastify'
 import { combineEpics, ofType } from 'redux-observable'
-import { from, mergeMap, catchError, startWith, endWith } from 'rxjs'
+import { from, mergeMap, catchError, startWith } from 'rxjs'
 import { axiosErrorHandler } from '@/utils/axiosErrorHandler'
 import accountApi from '@/api/accountApi'
 import {
@@ -10,6 +9,10 @@ import {
     getAgents,
     getAgentsSuccess,
     getAgentsFailure,
+    getSelectedAgent,
+    getSelectedAgentSuccess,
+    getSelectedAgentFailure,
+    setIsLoading
 } from '@/features/accountAgentsSlice'
 import type { Observable } from 'rxjs'
 
@@ -22,7 +25,6 @@ const createAgentEpic: Epic = (action$: ActionsType) => {
         mergeMap((action: ReturnType<typeof createAgent>) => {
             return from(accountApi.createAgent(action.payload)).pipe(
                 mergeMap((res) => {
-                    console.log(res.data.data.token)
                     return [
                         createAgentSuccess({
                             id: res.data.data.id,
@@ -34,17 +36,18 @@ const createAgentEpic: Epic = (action$: ActionsType) => {
                 catchError((err) => {
                     axiosErrorHandler(err)
                     return [createAgentFailure()]
-                })
+                }),
+                startWith(setIsLoading(true)),
             )
         })
     )
 }
 
-const getAgentsEpic: Epic = (action$: ActionsType) => {
+const getAgentsListEpic: Epic = (action$: ActionsType) => {
     return action$.pipe(
         ofType(getAgents.type),
         mergeMap(() => {
-            return from(accountApi.getAgents()).pipe(
+            return from(accountApi.getAgentsList()).pipe(
                 mergeMap((res) => {
                     return [
                         getAgentsSuccess(res.data.data),
@@ -59,4 +62,31 @@ const getAgentsEpic: Epic = (action$: ActionsType) => {
     )
 }
 
-export default combineEpics(createAgentEpic, getAgentsEpic)
+const getSelectedAgentEpic = (action$: ActionsType) => {
+    return action$.pipe(
+        ofType(getSelectedAgent.type),
+        mergeMap((action: ReturnType<typeof getSelectedAgent>) => {
+            return from(accountApi.getSelectedAgent(action.payload.id)).pipe(
+                mergeMap((res) => {
+                    const selectAccountAgentData = res.data.data
+
+                    if (selectAccountAgentData.token) {
+                        sessionStorage.setItem('spacetraders-token', selectAccountAgentData.token)
+                    }
+
+                    return [
+                        getSelectedAgentSuccess(selectAccountAgentData),
+                    ]
+                }),
+                catchError((err) => {
+                    axiosErrorHandler(err)
+                    return [getSelectedAgentFailure()]
+                }),
+                startWith(setIsLoading(true)),
+            )
+        }),
+    )
+}
+
+
+export default combineEpics(createAgentEpic, getAgentsListEpic, getSelectedAgentEpic)

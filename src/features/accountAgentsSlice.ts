@@ -53,6 +53,9 @@ const accountAgentsSlice = createSlice({
         deleteAgentFailure: (state) => {
             state.isLoading = false
         },
+        setIsLoading: (state, action: PayloadAction<boolean>) => {
+            state.isLoading = action.payload
+        }
     },
 })
 
@@ -66,6 +69,7 @@ export const {
     createAgentFailure,
     deleteAgentSuccess,
     deleteAgentFailure,
+    setIsLoading,
 } = accountAgentsSlice.actions
 
 // Manually set action creators
@@ -79,5 +83,9 @@ export const createAgent = createAction('accountAgents/createAgent', ({ symbol, 
 export const deleteAgent = createAction('accountAgents/deleteAgent', (id: number) => ({
     payload: { id },
 }))
+
+// Selectors
+export const selectAccountAgentsIsLoading = (state: RootState) => state.account.agents.isLoading
+export const selectAccountAgents = (state: RootState) => state.account.agents.agents
 
 export default accountAgentsSlice.reducer
