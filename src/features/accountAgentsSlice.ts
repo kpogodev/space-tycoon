@@ -1,12 +1,13 @@
 import { createSlice, createAction } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
-import type { CreateAgentInputs } from '@/types/account'
+import type { CreateAgentInputs, PatchAgentInputs } from '@/types/account'
 
 interface Agent {
     id: number
     symbol: string
     faction: string
+    avatar: string
 }
 
 interface AccountAgentsState {
@@ -46,6 +47,17 @@ const accountAgentsSlice = createSlice({
         createAgentFailure: (state) => {
             state.isLoading = false
         },
+        patchAgentSuccess: (state, action: PayloadAction<Agent>) => {
+            state.agents = state.agents.map((agent) => (agent.id === action.payload.id ? action.payload : agent))
+            state.selectedAgent =
+                state.selectedAgent && state.selectedAgent.id === action.payload.id
+                    ? action.payload
+                    : state.selectedAgent
+            state.isLoading = false
+        },
+        patchAgentFailure: (state) => {
+            state.isLoading = false
+        },
         deleteAgentSuccess: (state, action: PayloadAction<number>) => {
             state.agents = state.agents.filter((agent) => agent.id !== action.payload)
             state.isLoading = false
@@ -55,7 +67,7 @@ const accountAgentsSlice = createSlice({
         },
         setIsLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload
-        }
+        },
     },
 })
 
@@ -69,6 +81,8 @@ export const {
     createAgentFailure,
     deleteAgentSuccess,
     deleteAgentFailure,
+    patchAgentSuccess,
+    patchAgentFailure,
     setIsLoading,
 } = accountAgentsSlice.actions
 
@@ -76,6 +90,9 @@ export const {
 export const getAgents = createAction('accountAgents/getAgents')
 export const getSelectedAgent = createAction('accountAgents/getSelectedAgent', (id: number) => ({
     payload: { id },
+}))
+export const patchAgent = createAction('accountAgents/patchAgent', (id: number, payload: PatchAgentInputs) => ({
+    payload: { id, payload },
 }))
 export const createAgent = createAction('accountAgents/createAgent', ({ symbol, faction }: CreateAgentInputs) => ({
     payload: { symbol, faction },

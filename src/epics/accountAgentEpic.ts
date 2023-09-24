@@ -12,7 +12,10 @@ import {
     getSelectedAgent,
     getSelectedAgentSuccess,
     getSelectedAgentFailure,
-    setIsLoading
+    patchAgent,
+    patchAgentSuccess,
+    patchAgentFailure,
+    setIsLoading,
 } from '@/features/accountAgentsSlice'
 import type { Observable } from 'rxjs'
 
@@ -25,19 +28,13 @@ const createAgentEpic: Epic = (action$: ActionsType) => {
         mergeMap((action: ReturnType<typeof createAgent>) => {
             return from(accountApi.createAgent(action.payload)).pipe(
                 mergeMap((res) => {
-                    return [
-                        createAgentSuccess({
-                            id: res.data.data.id,
-                            symbol: res.data.data.symbol,
-                            faction: res.data.data.faction,
-                        }),
-                    ]
+                    return [createAgentSuccess(res.data.data)]
                 }),
                 catchError((err) => {
                     axiosErrorHandler(err)
                     return [createAgentFailure()]
                 }),
-                startWith(setIsLoading(true)),
+                startWith(setIsLoading(true))
             )
         })
     )
@@ -49,9 +46,7 @@ const getAgentsListEpic: Epic = (action$: ActionsType) => {
         mergeMap(() => {
             return from(accountApi.getAgentsList()).pipe(
                 mergeMap((res) => {
-                    return [
-                        getAgentsSuccess(res.data.data),
-                    ]
+                    return [getAgentsSuccess(res.data.data)]
                 }),
                 catchError((err) => {
                     axiosErrorHandler(err)
@@ -74,19 +69,34 @@ const getSelectedAgentEpic = (action$: ActionsType) => {
                         sessionStorage.setItem('spacetraders-token', selectAccountAgentData.token)
                     }
 
-                    return [
-                        getSelectedAgentSuccess(selectAccountAgentData),
-                    ]
+                    return [getSelectedAgentSuccess(selectAccountAgentData)]
                 }),
                 catchError((err) => {
                     axiosErrorHandler(err)
                     return [getSelectedAgentFailure()]
                 }),
-                startWith(setIsLoading(true)),
+                startWith(setIsLoading(true))
             )
-        }),
+        })
     )
 }
 
+const patchAgentEpic = (action$: ActionsType) => {
+    return action$.pipe(
+        ofType(patchAgent.type),
+        mergeMap((action: ReturnType<typeof patchAgent>) => {
+            return from(accountApi.patchAgent(action.payload.id, action.payload.payload)).pipe(
+                mergeMap((res) => {
+                    return [patchAgentSuccess(res.data.data)]
+                }),
+                catchError((err) => {
+                    axiosErrorHandler(err)
+                    return [patchAgentFailure()]
+                }),
+                startWith(setIsLoading(true))
+            )
+        })
+    )
+}
 
-export default combineEpics(createAgentEpic, getAgentsListEpic, getSelectedAgentEpic)
+export default combineEpics(createAgentEpic, getAgentsListEpic, getSelectedAgentEpic, patchAgentEpic)
