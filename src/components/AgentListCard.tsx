@@ -2,15 +2,14 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription }
 import { Button } from './ui/button'
 import { useAppDispatch } from '@/app/hooks'
 import { getSelectedAgent } from '@/features/accountAgentsSlice'
-import avatar from '@/assets/avatars/avatar-ship-3.svg'
-interface AgentListCardProps {
-    id: number
-    symbol: string
-    faction: string
-}
+import { agentAvatarImporter } from '@/utils/agentAvatarImporter'
+import type { RootState } from '@/app/store'
+
+type AgentListCardProps = RootState['account']['agents']['agents'][0]
 
 const AgentListCard = ({ agent }: { agent: AgentListCardProps }) => {
     const dispatch = useAppDispatch()
+    const avatar = agentAvatarImporter(agent.avatar)
 
     const handlePlay = () => {
         dispatch(getSelectedAgent(agent.id))

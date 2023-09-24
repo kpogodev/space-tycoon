@@ -1,14 +1,10 @@
 import { createSlice, createAction } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
-import type { CreateAgentInputs, PatchAgentInputs } from '@/types/account'
+import type { CreateAgentInputs, PatchAgentInputs, AgentResponseData } from '@/types/account'
 
-interface Agent {
-    id: number
-    symbol: string
-    faction: string
-    avatar: string
-}
+
+type Agent = Pick<AgentResponseData, 'id' | 'symbol' | 'faction' | 'avatar'>
 
 interface AccountAgentsState {
     agents: Agent[]
