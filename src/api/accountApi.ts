@@ -9,7 +9,7 @@ type ResponseData<T> = {
 }
 type ResponseType<T> = Promise<AxiosResponse<ResponseData<T>>>
 
-type AgentsResponseData = Pick<AgentResponseData, 'id'| 'symbol' | 'faction' | 'avatar'>
+type AgentsResponseData = Pick<AgentResponseData, 'id'| 'symbol' | 'faction' | 'avatar' | 'createdAt'>
 type GetAgentsResponseType = ResponseType<AgentsResponseData[]>
 type CreateAgentResponseType = ResponseType<AgentResponseData>
 

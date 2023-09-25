@@ -1,11 +1,16 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Button } from './ui/button'
-import { useAppDispatch } from '@/app/hooks'
-import { getSelectedAgent } from '@/features/accountAgentsSlice'
-import { agentAvatarImporter } from '@/utils/agentAvatarImporter'
-import type { RootState } from '@/app/store'
+import type { RootState } from '@/app/store';
+import { useAppDispatch } from '@/app/hooks';
+import { getSelectedAgent } from '@/features/accountAgentsSlice';
+import { agentAvatarImporter } from '@/utils/agentAvatarImporter';
+import AgentListCardMenu from '@/components/AgentListCardMenu';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
-type AgentListCardProps = RootState['account']['agents']['agents'][0]
+
+
+
+
+type AgentListCardProps = RootState['account']['agents']['list'][0]
 
 const AgentListCard = ({ agent }: { agent: AgentListCardProps }) => {
     const dispatch = useAppDispatch()
@@ -16,9 +21,10 @@ const AgentListCard = ({ agent }: { agent: AgentListCardProps }) => {
     }
     return (
         <Card className='flex flex-col'>
-            <CardHeader>
-                <CardTitle className='text-center'>Agent: {agent.symbol}</CardTitle>
+            <CardHeader className='relative'>
+                <CardTitle className='text-center'>Symbol: {agent.symbol}</CardTitle>
                 <CardDescription className='w-full text-center'>Faction: {agent.faction}</CardDescription>
+                <AgentListCardMenu agentId={agent.id} />
             </CardHeader>
             <CardContent className='grow grid place-items-center'>
                 <img className='w-1/3 mx-auto' src={avatar} alt='avatar' />

@@ -15,7 +15,8 @@ import {
     patchAgent,
     patchAgentSuccess,
     patchAgentFailure,
-    setIsLoading,
+    setListIsLoading,
+    setSelectedIsLoading
 } from '@/features/accountAgentsSlice'
 import type { Observable } from 'rxjs'
 
@@ -34,7 +35,7 @@ const createAgentEpic: Epic = (action$: ActionsType) => {
                     axiosErrorHandler(err)
                     return [createAgentFailure()]
                 }),
-                startWith(setIsLoading(true))
+                startWith(setListIsLoading(true))
             )
         })
     )
@@ -53,7 +54,8 @@ const getAgentsListEpic: Epic = (action$: ActionsType) => {
                     return [getAgentsFailure()]
                 })
             )
-        })
+        }),
+        startWith(setListIsLoading(true))
     )
 }
 
@@ -75,7 +77,7 @@ const getSelectedAgentEpic = (action$: ActionsType) => {
                     axiosErrorHandler(err)
                     return [getSelectedAgentFailure()]
                 }),
-                startWith(setIsLoading(true))
+                startWith(setSelectedIsLoading(true))
             )
         })
     )
@@ -93,7 +95,7 @@ const patchAgentEpic = (action$: ActionsType) => {
                     axiosErrorHandler(err)
                     return [patchAgentFailure()]
                 }),
-                startWith(setIsLoading(true))
+                startWith(setListIsLoading(true))
             )
         })
     )

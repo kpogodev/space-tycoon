@@ -1,6 +1,8 @@
 import type { agentAvatarList } from '@/utils/agentAvatarImporter'
 
+//ensure that only one property from the given object can be present
 type OnlyOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<U[keyof U]>
+
 type AgentAvatar = keyof typeof agentAvatarList
 export interface AgentResponseData {
     id: number

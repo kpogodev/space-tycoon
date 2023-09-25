@@ -4,18 +4,20 @@ import type { RootState } from '@/app/store'
 import type { CreateAgentInputs, PatchAgentInputs, AgentResponseData } from '@/types/account'
 
 
-type Agent = Pick<AgentResponseData, 'id' | 'symbol' | 'faction' | 'avatar'>
+type Agent = Pick<AgentResponseData, 'id' | 'symbol' | 'faction' | 'avatar' | 'createdAt'>
 
 interface AccountAgentsState {
-    agents: Agent[]
-    selectedAgent: Agent | null
-    isLoading: boolean
+    list: Agent[]
+    listIsLoading: boolean
+    selected: AgentResponseData | null
+    selectedIsLoading: boolean
 }
 
 const initialState: AccountAgentsState = {
-    agents: [],
-    selectedAgent: null,
-    isLoading: false,
+    list: [],
+    listIsLoading: false,
+    selected: null,
+    selectedIsLoading: false,
 }
 
 const accountAgentsSlice = createSlice({
@@ -23,47 +25,50 @@ const accountAgentsSlice = createSlice({
     initialState,
     reducers: {
         getAgentsSuccess: (state, action: PayloadAction<Agent[]>) => {
-            state.agents = action.payload
-            state.isLoading = false
+            state.list = action.payload
+            state.listIsLoading = false
         },
         getAgentsFailure: (state) => {
-            state.isLoading = false
+            state.listIsLoading = false
         },
-        getSelectedAgentSuccess: (state, action: PayloadAction<Agent>) => {
-            state.selectedAgent = action.payload
-            state.isLoading = false
+        getSelectedAgentSuccess: (state, action: PayloadAction<AgentResponseData>) => {
+            state.selected = action.payload
+            state.selectedIsLoading = false
         },
         getSelectedAgentFailure: (state) => {
-            state.isLoading = false
+            state.selectedIsLoading = false
         },
         createAgentSuccess: (state, action: PayloadAction<Agent>) => {
-            state.agents.push(action.payload)
-            state.isLoading = false
+            state.list.push(action.payload)
+            state.listIsLoading = false
         },
         createAgentFailure: (state) => {
-            state.isLoading = false
+            state.listIsLoading = false
         },
-        patchAgentSuccess: (state, action: PayloadAction<Agent>) => {
-            state.agents = state.agents.map((agent) => (agent.id === action.payload.id ? action.payload : agent))
-            state.selectedAgent =
-                state.selectedAgent && state.selectedAgent.id === action.payload.id
+        patchAgentSuccess: (state, action: PayloadAction<AgentResponseData>) => {
+            state.list = state.list.map((agent) => (agent.id === action.payload.id ? action.payload : agent))
+            state.selected =
+                state.selected && state.selected.id === action.payload.id
                     ? action.payload
-                    : state.selectedAgent
-            state.isLoading = false
+                    : state.selected
+            state.listIsLoading = false
         },
         patchAgentFailure: (state) => {
-            state.isLoading = false
+            state.listIsLoading = false
         },
         deleteAgentSuccess: (state, action: PayloadAction<number>) => {
-            state.agents = state.agents.filter((agent) => agent.id !== action.payload)
-            state.isLoading = false
+            state.list = state.list.filter((agent) => agent.id !== action.payload)
+            state.listIsLoading = false
         },
         deleteAgentFailure: (state) => {
-            state.isLoading = false
+            state.listIsLoading = false
         },
-        setIsLoading: (state, action: PayloadAction<boolean>) => {
-            state.isLoading = action.payload
+        setListIsLoading: (state, action: PayloadAction<boolean>) => {
+            state.listIsLoading = action.payload
         },
+        setSelectedIsLoading: (state, action: PayloadAction<boolean>) => {
+            state.selectedIsLoading = action.payload
+        }
     },
 })
 
@@ -79,7 +84,8 @@ export const {
     deleteAgentFailure,
     patchAgentSuccess,
     patchAgentFailure,
-    setIsLoading,
+    setListIsLoading,
+    setSelectedIsLoading
 } = accountAgentsSlice.actions
 
 // Manually set action creators
@@ -98,7 +104,8 @@ export const deleteAgent = createAction('accountAgents/deleteAgent', (id: number
 }))
 
 // Selectors
-export const selectAccountAgentsIsLoading = (state: RootState) => state.account.agents.isLoading
-export const selectAccountAgents = (state: RootState) => state.account.agents.agents
+export const selectAccountAgentsIsLoading = (state: RootState) => state.account.agents.listIsLoading
+export const selectAccountAgentsList = (state: RootState) => state.account.agents.list
+export const selectAgentFromListById = (id: Agent['id']) => (state: RootState) => state.account.agents.list.find((agent) => agent.id === id)
 
 export default accountAgentsSlice.reducer

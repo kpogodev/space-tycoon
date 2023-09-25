@@ -1,12 +1,12 @@
 import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
-import { getAgents, selectAccountAgents } from "@/features/accountAgentsSlice"
+import { getAgents, selectAccountAgentsList } from "@/features/accountAgentsSlice"
 import AgentCreate from "./AgentCreate"
 import AgentListCard from "./AgentListCard"
 
 const AgentsList = () => {
   const dispatch = useAppDispatch()
-  const agents = useAppSelector(selectAccountAgents)
+  const agents = useAppSelector(selectAccountAgentsList)
 
   useEffect(() => {
     dispatch(getAgents())
