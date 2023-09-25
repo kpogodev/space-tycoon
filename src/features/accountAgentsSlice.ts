@@ -3,7 +3,6 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
 import type { CreateAgentInputs, PatchAgentInputs, AgentResponseData } from '@/types/account'
 
-
 type Agent = Pick<AgentResponseData, 'id' | 'symbol' | 'faction' | 'avatar' | 'createdAt'>
 
 interface AccountAgentsState {
@@ -46,11 +45,18 @@ const accountAgentsSlice = createSlice({
             state.listIsLoading = false
         },
         patchAgentSuccess: (state, action: PayloadAction<AgentResponseData>) => {
-            state.list = state.list.map((agent) => (agent.id === action.payload.id ? action.payload : agent))
-            state.selected =
-                state.selected && state.selected.id === action.payload.id
-                    ? action.payload
-                    : state.selected
+            state.list = state.list.map((agent) =>
+                agent.id === action.payload.id
+                    ? {
+                          id: action.payload.id,
+                          symbol: action.payload.symbol,
+                          faction: action.payload.faction,
+                          avatar: action.payload.avatar,
+                          createdAt: action.payload.createdAt,
+                      }
+                    : agent
+            )
+            state.selected = state.selected && state.selected.id === action.payload.id ? action.payload : state.selected
             state.listIsLoading = false
         },
         patchAgentFailure: (state) => {
@@ -68,7 +74,7 @@ const accountAgentsSlice = createSlice({
         },
         setSelectedIsLoading: (state, action: PayloadAction<boolean>) => {
             state.selectedIsLoading = action.payload
-        }
+        },
     },
 })
 
@@ -85,7 +91,7 @@ export const {
     patchAgentSuccess,
     patchAgentFailure,
     setListIsLoading,
-    setSelectedIsLoading
+    setSelectedIsLoading,
 } = accountAgentsSlice.actions
 
 // Manually set action creators
@@ -106,6 +112,7 @@ export const deleteAgent = createAction('accountAgents/deleteAgent', (id: number
 // Selectors
 export const selectAccountAgentsIsLoading = (state: RootState) => state.account.agents.listIsLoading
 export const selectAccountAgentsList = (state: RootState) => state.account.agents.list
-export const selectAgentFromListById = (id: Agent['id']) => (state: RootState) => state.account.agents.list.find((agent) => agent.id === id)
+export const selectAgentFromListById = (id: Agent['id']) => (state: RootState) =>
+    state.account.agents.list.find((agent) => agent.id === id)
 
 export default accountAgentsSlice.reducer
