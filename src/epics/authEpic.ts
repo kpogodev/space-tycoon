@@ -1,8 +1,10 @@
-import { toast } from 'react-toastify'
 import { combineEpics, ofType } from 'redux-observable'
+import type { Observable } from 'rxjs'
+import { toast } from 'react-toastify'
 import { from, mergeMap, catchError, startWith, endWith } from 'rxjs'
 import { axiosErrorHandler } from '@/utils/axiosErrorHandler'
 import authApi from '@/api/authApi'
+import { persistor } from '@/app/store'
 import {
     checkAuth,
     checkAuthSuccess,
@@ -18,7 +20,6 @@ import {
     logoutAuthSuccess,
     logoutAuthFailure,
 } from '@/features/authSlice'
-import type { Observable } from 'rxjs'
 
 type ActionsType = Observable<any>
 type Epic = (action$: ActionsType) => Observable<any>
@@ -82,7 +83,11 @@ const logoutEpic: Epic = (action$: ActionsType) => {
         ofType(logoutAuth.type),
         mergeMap(() => {
             return from(authApi.logout()).pipe(
-                mergeMap(() => [logoutAuthSuccess()]),
+                mergeMap(() => {
+                    persistor.purge()
+                    sessionStorage.removeItem('spacetraders-token')
+                    return [logoutAuthSuccess()]
+                }),
                 catchError((err) => {
                     axiosErrorHandler(err)
                     return [logoutAuthFailure()]
