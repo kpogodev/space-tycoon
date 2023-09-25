@@ -57,6 +57,7 @@ const AgentCreateForm = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            symbol: '',
             faction: 'COSMIC',
         },
     })
