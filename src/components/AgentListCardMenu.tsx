@@ -1,5 +1,7 @@
-import { DotsVerticalIcon, GearIcon, TrashIcon, ListBulletIcon } from '@radix-ui/react-icons'
 import type { RootState } from '@/app/store'
+import { useAppDispatch } from '@/app/hooks'
+import { deleteAgent } from '@/features/accountAgentsSlice'
+import { DotsVerticalIcon, GearIcon, TrashIcon, ListBulletIcon } from '@radix-ui/react-icons'
 import AgentAvatarPicker from '@/components/AgentAvatarPicker'
 import { Button } from '@/components/ui/button'
 import {
@@ -24,6 +26,13 @@ import {
 type AgentIdType = RootState['account']['agents']['list'][0]['id']
 
 const AgentListCardMenu = ({ agentId }: { agentId: AgentIdType }) => {
+    const dispatch = useAppDispatch()
+
+    const handleDeleteAgent = () => {
+        if (!agentId) return
+        dispatch(deleteAgent(agentId))
+    }
+
     return (
         <Dialog>
             <DropdownMenu>
@@ -52,7 +61,7 @@ const AgentListCardMenu = ({ agentId }: { agentId: AgentIdType }) => {
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className='cursor-pointer'>
+                    <DropdownMenuItem className='cursor-pointer' onClick={handleDeleteAgent}>
                         <span>Delete</span>
                         <DropdownMenuShortcut>
                             <TrashIcon />
@@ -64,8 +73,8 @@ const AgentListCardMenu = ({ agentId }: { agentId: AgentIdType }) => {
                 <DialogHeader>
                     <DialogTitle>Avatar</DialogTitle>
                     <DialogDescription>Choose your avatar</DialogDescription>
-                    <AgentAvatarPicker agentId={agentId} />
                 </DialogHeader>
+                <AgentAvatarPicker agentId={agentId} />
             </DialogContent>
         </Dialog>
     )

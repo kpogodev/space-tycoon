@@ -38,7 +38,7 @@ const AgentAvatarPicker = ({ agentId }: { agentId: AgentIdType }) => {
     }
 
     return (
-        <div className='flex flex-col gap-6 !mt-6'>
+        <div className='flex flex-col gap-6'>
             <div className='grid grid-cols-5 gap-4'>
                 {avatarArray.map((avatar) => (
                     <Button

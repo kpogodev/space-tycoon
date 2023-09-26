@@ -12,18 +12,19 @@ type ResponseType<T> = Promise<AxiosResponse<ResponseData<T>>>
 type AgentsResponseData = Pick<AgentResponseData, 'id'| 'symbol' | 'faction' | 'avatar' | 'createdAt'>
 type GetAgentsResponseType = ResponseType<AgentsResponseData[]>
 type CreateAgentResponseType = ResponseType<AgentResponseData>
+type DeleteAgentResponseType = ResponseType<{}>
 
 
 const requestUrl = {
     getAgentsList: '/agent/list',
     createAgent: '/agent',
-    getSelectedAgent: (id: string | number) => `/agent/${id}`,
-    patchAgent: (id: string | number) => `/agent/${id}`,
+    agentById: (id: string | number) => `/agent/${id}`,
 }
 
 export default {
     getAgentsList: (): GetAgentsResponseType => axiosInstanceInternal.get(requestUrl.getAgentsList),
     createAgent: (payload: CreateAgentInputs): CreateAgentResponseType => axiosInstanceInternal.post(requestUrl.createAgent, payload),
-    getSelectedAgent: (id: number): ResponseType<AgentResponseData> => axiosInstanceInternal.get(requestUrl.getSelectedAgent(id)),
-    patchAgent: (id: number, payload: PatchAgentInputs): ResponseType<AgentResponseData> => axiosInstanceInternal.patch(requestUrl.patchAgent(id), payload),
+    getSelectedAgent: (id: number): ResponseType<AgentResponseData> => axiosInstanceInternal.get(requestUrl.agentById(id)),
+    patchAgent: (id: number, payload: PatchAgentInputs): ResponseType<AgentResponseData> => axiosInstanceInternal.patch(requestUrl.agentById(id), payload),
+    deleteAgent: (id: number): DeleteAgentResponseType => axiosInstanceInternal.delete(requestUrl.agentById(id)),
 }

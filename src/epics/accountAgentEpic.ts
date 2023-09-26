@@ -15,6 +15,9 @@ import {
     patchAgent,
     patchAgentSuccess,
     patchAgentFailure,
+    deleteAgent,
+    deleteAgentSuccess,
+    deleteAgentFailure,
     setListIsLoading,
     setSelectedIsLoading
 } from '@/features/accountAgentsSlice'
@@ -101,4 +104,22 @@ const patchAgentEpic = (action$: ActionsType) => {
     )
 }
 
-export default combineEpics(createAgentEpic, getAgentsListEpic, getSelectedAgentEpic, patchAgentEpic)
+const deleteAgentEpic = (action$: ActionsType) => {
+    return action$.pipe(
+        ofType(deleteAgent.type),
+        mergeMap((action: ReturnType<typeof deleteAgent>) => {
+            return from(accountApi.deleteAgent(action.payload.id)).pipe(
+                mergeMap(() => {
+                    return [deleteAgentSuccess(action.payload.id)]
+                }),
+                catchError((err) => {
+                    axiosErrorHandler(err)
+                    return [deleteAgentFailure()]
+                }),
+                startWith(setListIsLoading(true))
+            )
+        })
+    )
+}
+
+export default combineEpics(createAgentEpic, getAgentsListEpic, getSelectedAgentEpic, patchAgentEpic, deleteAgentEpic)

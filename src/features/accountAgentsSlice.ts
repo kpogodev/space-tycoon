@@ -64,6 +64,7 @@ const accountAgentsSlice = createSlice({
         },
         deleteAgentSuccess: (state, action: PayloadAction<number>) => {
             state.list = state.list.filter((agent) => agent.id !== action.payload)
+            state.selected = null
             state.listIsLoading = false
         },
         deleteAgentFailure: (state) => {
